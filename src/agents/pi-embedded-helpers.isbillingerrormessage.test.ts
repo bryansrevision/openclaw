@@ -724,7 +724,7 @@ describe("isFailoverErrorMessage", () => {
       "Error: connect ENETUNREACH 10.0.0.1:443",
       "Error: write EPIPE",
       "Error: read ENETRESET",
-      "Error: connect EHOSTDOWN 192.168.1.1:443",
+      "Error: connect EHOSTDOWN 192.168.2.1:443",
     ]);
   });
 

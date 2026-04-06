@@ -21,14 +21,14 @@ describe("network-interfaces", () => {
       snapshot: makeNetworkInterfacesSnapshot({
         lo0: [{ address: "127.0.0.1", family: "IPv4", internal: true }],
         en0: [
-          { address: " 192.168.1.42 ", family: "IPv4" },
+          { address: " 192.168.2.42 ", family: "IPv4" },
           { address: "fd7a:115c:a1e0::1", family: "IPv6" },
           { address: " ", family: "IPv6" },
         ],
       }),
       run: (snapshot: ReturnType<typeof makeNetworkInterfacesSnapshot>) =>
         expect(listExternalInterfaceAddresses(snapshot)).toEqual([
-          { name: "en0", address: "192.168.1.42", family: "IPv4" },
+          { name: "en0", address: "192.168.2.42", family: "IPv4" },
           { name: "en0", address: "fd7a:115c:a1e0::1", family: "IPv6" },
         ]),
     },
@@ -36,7 +36,7 @@ describe("network-interfaces", () => {
       name: "prefers configured interface names before falling back",
       snapshot: makeNetworkInterfacesSnapshot({
         wlan0: [{ address: "172.16.0.99", family: "IPv4" }],
-        en0: [{ address: "192.168.1.42", family: "IPv4" }],
+        en0: [{ address: "192.168.2.42", family: "IPv4" }],
       }),
       run: (snapshot: ReturnType<typeof makeNetworkInterfacesSnapshot>) =>
         expect(
@@ -44,7 +44,7 @@ describe("network-interfaces", () => {
             family: "IPv4",
             preferredNames: ["en0", "eth0"],
           }),
-        ).toBe("192.168.1.42"),
+        ).toBe("192.168.2.42"),
     },
   ])("$name", ({ snapshot, run }) => {
     run(snapshot);

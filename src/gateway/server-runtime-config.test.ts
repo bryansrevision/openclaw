@@ -26,7 +26,7 @@ describe("resolveGatewayRuntimeConfig", () => {
           gateway: {
             bind: "lan" as const,
             auth: TRUSTED_PROXY_AUTH,
-            trustedProxies: ["192.168.1.1"],
+            trustedProxies: ["192.168.2.1"],
             controlUi: { allowedOrigins: ["https://control.example.com"] },
           },
         },
@@ -192,12 +192,12 @@ describe("resolveGatewayRuntimeConfig", () => {
         cfg: {
           gateway: {
             bind: "custom" as const,
-            customBindHost: "192.168.1.100",
+            customBindHost: "192.168.2.100",
             auth: TOKEN_AUTH,
           },
         },
         host: "0.0.0.0",
-        expectedMessage: "gateway bind=custom requested 192.168.1.100 but resolved 0.0.0.0",
+        expectedMessage: "gateway bind=custom requested 192.168.2.100 but resolved 0.0.0.0",
       },
     ])("rejects $name", async ({ cfg, host, expectedMessage }) => {
       await expect(resolveGatewayRuntimeConfig({ cfg, port: 18789, host })).rejects.toThrow(

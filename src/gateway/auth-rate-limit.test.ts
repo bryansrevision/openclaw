@@ -35,7 +35,7 @@ describe("auth rate limiter", () => {
 
   it("allows requests when no failures have been recorded", () => {
     limiter = createAuthRateLimiter({ maxAttempts: 5, windowMs: 60_000, lockoutMs: 300_000 });
-    const result = limiter.check("192.168.1.1");
+    const result = limiter.check("192.168.2.1");
     expect(result.allowed).toBe(true);
     expect(result.remaining).toBe(5);
     expect(result.retryAfterMs).toBe(0);

@@ -236,7 +236,7 @@ describe("gateway canvas host auth", () => {
           clients.add(
             makeWsClient({
               connId: "c-operator",
-              clientIp: "192.168.1.10",
+              clientIp: "192.168.2.10",
               role: "operator",
               mode: "backend",
               canvasCapability: operatorOnlyCapability,
@@ -252,7 +252,7 @@ describe("gateway canvas host auth", () => {
           clients.add(
             makeWsClient({
               connId: "c-expired-node",
-              clientIp: "192.168.1.20",
+              clientIp: "192.168.2.20",
               role: "node",
               mode: "node",
               canvasCapability: expiredNodeCapability,
@@ -267,7 +267,7 @@ describe("gateway canvas host auth", () => {
 
           const activeNodeClient = makeWsClient({
             connId: "c-active-node",
-            clientIp: "192.168.1.30",
+            clientIp: "192.168.2.30",
             role: "node",
             mode: "node",
             canvasCapability: activeNodeCapability,

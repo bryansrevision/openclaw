@@ -87,7 +87,7 @@ export async function configureGatewayForSetup(
     if (needsPrompt) {
       const input = await prompter.text({
         message: "Custom IP address",
-        placeholder: "192.168.1.100",
+        placeholder: "192.168.2.100",
         initialValue: customBindHost ?? "",
         validate: validateIPv4AddressInput,
       });

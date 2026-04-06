@@ -678,7 +678,7 @@ describe("trusted-proxy auth", () => {
 
   it("rejects request from untrusted source", async () => {
     const res = await authorizeTrustedProxy({
-      remoteAddress: "192.168.1.100",
+      remoteAddress: "192.168.2.100",
       headers: {
         "x-forwarded-user": "attacker@evil.com",
         "x-forwarded-proto": "https",

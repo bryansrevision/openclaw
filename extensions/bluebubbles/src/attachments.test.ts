@@ -309,7 +309,7 @@ describe("downloadBlueBubblesAttachment", () => {
 
     const attachment: BlueBubblesAttachment = { guid: "att-private-ip" };
     await downloadBlueBubblesAttachment(attachment, {
-      serverUrl: "http://192.168.1.5:1234",
+      serverUrl: "http://192.168.2.5:1234",
       password: "test",
       cfg: { channels: { bluebubbles: {} } },
     });

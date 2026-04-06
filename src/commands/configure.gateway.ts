@@ -81,7 +81,7 @@ export async function promptGatewayConfig(
     const input = guardCancel(
       await text({
         message: "Custom IP address",
-        placeholder: "192.168.1.100",
+        placeholder: "192.168.2.100",
         validate: validateIPv4AddressInput,
       }),
       runtime,
@@ -295,7 +295,7 @@ export async function promptGatewayConfig(
     const trustedProxiesRaw = guardCancel(
       await text({
         message: "Trusted proxy IPs (comma-separated)",
-        placeholder: "10.0.1.10,192.168.1.5",
+        placeholder: "10.0.1.10,192.168.2.5",
         validate: (value) => {
           if (!value || String(value).trim() === "") {
             return "At least one trusted proxy IP is required";

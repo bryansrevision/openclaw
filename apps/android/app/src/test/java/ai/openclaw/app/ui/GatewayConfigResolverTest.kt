@@ -100,14 +100,14 @@ class GatewayConfigResolverTest {
 
   @Test
   fun parseGatewayEndpointAllowsPrivateLanCleartextWsUrls() {
-    val parsed = parseGatewayEndpoint("ws://192.168.1.20:18789")
+    val parsed = parseGatewayEndpoint("ws://192.168.2.20:18789")
 
     assertEquals(
       GatewayEndpointConfig(
-        host = "192.168.1.20",
+        host = "192.168.2.20",
         port = 18789,
         tls = false,
-        displayUrl = "http://192.168.1.20:18789",
+        displayUrl = "http://192.168.2.20:18789",
       ),
       parsed,
     )
@@ -291,14 +291,14 @@ class GatewayConfigResolverTest {
 
   @Test
   fun parseGatewayEndpointResultAcceptsLanCleartextGateway() {
-    val parsed = parseGatewayEndpointResult("ws://192.168.1.20:18789")
+    val parsed = parseGatewayEndpointResult("ws://192.168.2.20:18789")
 
     assertEquals(
       GatewayEndpointConfig(
-        host = "192.168.1.20",
+        host = "192.168.2.20",
         port = 18789,
         tls = false,
-        displayUrl = "http://192.168.1.20:18789",
+        displayUrl = "http://192.168.2.20:18789",
       ),
       parsed.config,
     )

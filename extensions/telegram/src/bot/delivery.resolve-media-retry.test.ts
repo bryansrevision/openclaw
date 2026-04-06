@@ -679,14 +679,14 @@ describe("resolveMedia original filename preservation", () => {
 
     const ctx = makeCtx("document", getFile);
     const result = await resolveMediaWithDefaults(ctx, {
-      apiRoot: "http://192.168.1.50:8081/custom-bot-api/",
+      apiRoot: "http://192.168.2.50:8081/custom-bot-api/",
     });
 
     expect(fetchRemoteMedia).toHaveBeenCalledWith(
       expect.objectContaining({
         ssrfPolicy: {
-          hostnameAllowlist: ["api.telegram.org", "192.168.1.50"],
-          allowedHostnames: ["192.168.1.50"],
+          hostnameAllowlist: ["api.telegram.org", "192.168.2.50"],
+          allowedHostnames: ["192.168.2.50"],
           allowRfc2544BenchmarkRange: true,
         },
       }),
@@ -717,7 +717,7 @@ describe("resolveMedia original filename preservation", () => {
     const getFile = vi.fn().mockResolvedValue({ file_path: "documents/file_42.pdf" });
     mockPdfFetchAndSave("file_42.pdf");
 
-    const customApiRoot = "http://192.168.1.50:8081/custom-bot-api";
+    const customApiRoot = "http://192.168.2.50:8081/custom-bot-api";
     const ctx = makeCtx("document", getFile);
     const result = await resolveMediaWithDefaults(ctx, { apiRoot: customApiRoot });
 

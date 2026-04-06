@@ -87,7 +87,7 @@ struct LowCoverageHelperTests {
             uiVersion: "1.0-ui",
             deviceFamily: "Mac",
             modelIdentifier: "MacBookPro",
-            remoteIp: "192.168.1.2",
+            remoteIp: "192.168.2.2",
             caps: ["chat"],
             commands: ["send"],
             permissions: ["send": true],
@@ -280,13 +280,13 @@ struct LowCoverageHelperTests {
         UserDefaults.standard.removeObject(forKey: key)
         #expect(loaded?.size.width == rect.size.width)
 
-        let parsed = CanvasWindowController._testParseIPv4("192.168.1.2")
+        let parsed = CanvasWindowController._testParseIPv4("192.168.2.2")
         #expect(parsed != nil)
         if let parsed {
             #expect(CanvasWindowController._testIsLocalNetworkIPv4(parsed))
         }
 
-        let url = try #require(URL(string: "http://192.168.1.2"))
+        let url = try #require(URL(string: "http://192.168.2.2"))
         #expect(CanvasWindowController._testIsLocalNetworkCanvasURL(url))
         #expect(CanvasWindowController._testParseIPv4("not-an-ip") == nil)
     }

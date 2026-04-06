@@ -809,11 +809,11 @@ describe("legacy migrate controlUi.allowedOrigins seed (issue #29385)", () => {
     const res = migrateLegacyConfig({
       gateway: {
         bind: "custom",
-        customBindHost: "192.168.1.100",
+        customBindHost: "192.168.2.100",
         auth: { mode: "token", token: "tok" },
       },
     });
-    expect(res.config?.gateway?.controlUi?.allowedOrigins).toContain("http://192.168.1.100:18789");
+    expect(res.config?.gateway?.controlUi?.allowedOrigins).toContain("http://192.168.2.100:18789");
     expect(res.config?.gateway?.controlUi?.allowedOrigins).toContain("http://localhost:18789");
   });
 

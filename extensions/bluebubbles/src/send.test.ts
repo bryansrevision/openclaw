@@ -483,7 +483,7 @@ describe("send", () => {
 
       try {
         const result = await sendMessageBlueBubbles("+15551234567", "Hello world!", {
-          serverUrl: "http://192.168.1.5:1234",
+          serverUrl: "http://192.168.2.5:1234",
           password: "test",
         });
 

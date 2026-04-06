@@ -221,10 +221,10 @@ export const blueBubblesSetupWizard: ChannelSetupWizard = {
     {
       inputKey: "httpUrl",
       message: "BlueBubbles server URL",
-      placeholder: "http://192.168.1.100:1234",
+      placeholder: "http://192.168.2.100:1234",
       helpTitle: "BlueBubbles server URL",
       helpLines: [
-        "Enter the BlueBubbles server URL (e.g., http://192.168.1.100:1234).",
+        "Enter the BlueBubbles server URL (e.g., http://192.168.2.100:1234).",
         "Find this in the BlueBubbles Server app under Connection.",
         `Docs: ${formatDocsLink("/channels/bluebubbles", "bluebubbles")}`,
       ],

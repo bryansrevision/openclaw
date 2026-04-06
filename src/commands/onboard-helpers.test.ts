@@ -141,10 +141,10 @@ describe("resolveControlUiLinks", () => {
     const links = resolveControlUiLinks({
       port: 18789,
       bind: "custom",
-      customBindHost: "192.168.1.100",
+      customBindHost: "192.168.2.100",
     });
-    expect(links.httpUrl).toBe("http://192.168.1.100:18789/");
-    expect(links.wsUrl).toBe("ws://192.168.1.100:18789");
+    expect(links.httpUrl).toBe("http://192.168.2.100:18789/");
+    expect(links.wsUrl).toBe("ws://192.168.2.100:18789");
   });
 
   it("falls back to loopback for invalid customBindHost", () => {

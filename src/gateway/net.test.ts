@@ -41,7 +41,7 @@ describe("isLocalishHost", () => {
   });
 
   it("rejects non-local hosts", () => {
-    const rejected = ["example.com", "192.168.1.10", "203.0.113.5:18789"];
+    const rejected = ["example.com", "192.168.2.10", "203.0.113.5:18789"];
     for (const host of rejected) {
       expect(isLocalishHost(host), host).toBe(false);
     }
@@ -59,20 +59,20 @@ describe("isTrustedProxyAddress", () => {
   it.each([
     {
       name: "matches exact IP entries",
-      ip: "192.168.1.1",
-      trustedProxies: ["192.168.1.1"],
+      ip: "192.168.2.1",
+      trustedProxies: ["192.168.2.1"],
       expected: true,
     },
     {
       name: "rejects non-matching exact IP entries",
-      ip: "192.168.1.2",
-      trustedProxies: ["192.168.1.1"],
+      ip: "192.168.2.2",
+      trustedProxies: ["192.168.2.1"],
       expected: false,
     },
     {
       name: "matches one of multiple exact entries",
       ip: "10.0.0.5",
-      trustedProxies: ["192.168.1.1", "10.0.0.5", "172.16.0.1"],
+      trustedProxies: ["192.168.2.1", "10.0.0.5", "172.16.0.1"],
       expected: true,
     },
     {
@@ -120,13 +120,13 @@ describe("isTrustedProxyAddress", () => {
     {
       name: "handles mixed exact IP and CIDR entries",
       ip: "172.19.5.100",
-      trustedProxies: ["192.168.1.1", "10.42.0.0/24", "172.19.0.0/16"],
+      trustedProxies: ["192.168.2.1", "10.42.0.0/24", "172.19.0.0/16"],
       expected: true,
     },
     {
       name: "rejects IPs missing from mixed exact IP and CIDR entries",
       ip: "10.43.0.1",
-      trustedProxies: ["192.168.1.1", "10.42.0.0/24", "172.19.0.0/16"],
+      trustedProxies: ["192.168.2.1", "10.42.0.0/24", "172.19.0.0/16"],
       expected: false,
     },
     {
@@ -149,25 +149,25 @@ describe("isTrustedProxyAddress", () => {
     },
     {
       name: "normalizes IPv4-mapped IPv6 addresses",
-      ip: "::ffff:192.168.1.1",
-      trustedProxies: ["192.168.1.1"],
+      ip: "::ffff:192.168.2.1",
+      trustedProxies: ["192.168.2.1"],
       expected: true,
     },
     {
       name: "returns false when IP is undefined",
       ip: undefined,
-      trustedProxies: ["192.168.1.1"],
+      trustedProxies: ["192.168.2.1"],
       expected: false,
     },
     {
       name: "returns false when trusted proxies are undefined",
-      ip: "192.168.1.1",
+      ip: "192.168.2.1",
       trustedProxies: undefined,
       expected: false,
     },
     {
       name: "returns false when trusted proxies are empty",
-      ip: "192.168.1.1",
+      ip: "192.168.2.1",
       trustedProxies: [],
       expected: false,
     },
@@ -325,9 +325,9 @@ describe("pickPrimaryLanIPv4", () => {
       name: "prefers en0",
       interfaces: makeNetworkInterfacesSnapshot({
         lo0: [{ address: "127.0.0.1", family: "IPv4", internal: true }],
-        en0: [{ address: "192.168.1.42", family: "IPv4" }],
+        en0: [{ address: "192.168.2.42", family: "IPv4" }],
       }),
-      expected: "192.168.1.42",
+      expected: "192.168.2.42",
     },
     {
       name: "falls back to eth0",
@@ -417,7 +417,7 @@ describe("isPrivateOrLoopbackHost", () => {
     expect(isPrivateOrLoopbackHost("10.42.1.100")).toBe(true);
     expect(isPrivateOrLoopbackHost("172.16.0.1")).toBe(true);
     expect(isPrivateOrLoopbackHost("172.31.255.254")).toBe(true);
-    expect(isPrivateOrLoopbackHost("192.168.1.100")).toBe(true);
+    expect(isPrivateOrLoopbackHost("192.168.2.100")).toBe(true);
   });
 
   it("accepts CGNAT and link-local addresses", () => {
@@ -462,7 +462,7 @@ describe("isSecureWebSocketUrl", () => {
     { input: "wss://127.0.0.1:18789", expected: true },
     { input: "wss://localhost:18789", expected: true },
     { input: "wss://remote.example.com:18789", expected: true },
-    { input: "wss://192.168.1.100:18789", expected: true },
+    { input: "wss://192.168.2.100:18789", expected: true },
     // ws:// loopback accepted
     { input: "ws://127.0.0.1:18789", expected: true },
     { input: "ws://localhost:18789", expected: true },
@@ -473,7 +473,7 @@ describe("isSecureWebSocketUrl", () => {
     { input: "ws://10.42.1.100:18789", expected: false },
     { input: "ws://172.16.0.1:18789", expected: false },
     { input: "ws://172.31.255.254:18789", expected: false },
-    { input: "ws://192.168.1.100:18789", expected: false },
+    { input: "ws://192.168.2.100:18789", expected: false },
     { input: "ws://169.254.10.20:18789", expected: false },
     { input: "ws://100.64.0.1:18789", expected: false },
     { input: "ws://[fc00::1]:18789", expected: false },
@@ -502,7 +502,7 @@ describe("isSecureWebSocketUrl", () => {
       "ws://10.0.0.5:18789",
       "http://10.0.0.5:18789",
       "ws://172.16.0.1:18789",
-      "ws://192.168.1.100:18789",
+      "ws://192.168.2.100:18789",
       "ws://100.64.0.1:18789",
       "ws://169.254.10.20:18789",
       "ws://[fc00::1]:18789",

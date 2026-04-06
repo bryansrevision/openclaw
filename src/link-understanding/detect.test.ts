@@ -37,7 +37,7 @@ describe("extractLinksFromMessage", () => {
   it("blocks private network ranges", () => {
     expect(extractLinksFromMessage("http://10.0.0.1/internal")).toEqual([]);
     expect(extractLinksFromMessage("http://172.16.0.1/internal")).toEqual([]);
-    expect(extractLinksFromMessage("http://192.168.1.1/internal")).toEqual([]);
+    expect(extractLinksFromMessage("http://192.168.2.1/internal")).toEqual([]);
   });
 
   it("blocks link-local and cloud metadata addresses", () => {

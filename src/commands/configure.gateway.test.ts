@@ -127,7 +127,7 @@ describe("promptGatewayConfig", () => {
         "x-forwarded-user",
         "x-forwarded-proto,x-forwarded-host",
         "nick@example.com",
-        "10.0.1.10,192.168.1.5",
+        "10.0.1.10,192.168.2.5",
       ],
     });
 
@@ -138,7 +138,7 @@ describe("promptGatewayConfig", () => {
       allowUsers: ["nick@example.com"],
     });
     expect(result.config.gateway?.bind).toBe("loopback");
-    expect(result.config.gateway?.trustedProxies).toEqual(["10.0.1.10", "192.168.1.5"]);
+    expect(result.config.gateway?.trustedProxies).toEqual(["10.0.1.10", "192.168.2.5"]);
   });
 
   it("handles trusted-proxy with no optional fields", async () => {

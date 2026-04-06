@@ -229,14 +229,14 @@ describe("callGateway url resolution", () => {
       label: "lan with TLS",
       gateway: { mode: "local", bind: "lan", tls: { enabled: true } },
       tailnetIp: undefined,
-      lanIp: "192.168.1.42",
+      lanIp: "192.168.2.42",
       expectedUrl: "wss://127.0.0.1:18800",
     },
     {
       label: "lan without TLS",
       gateway: { mode: "local", bind: "lan" },
       tailnetIp: undefined,
-      lanIp: "192.168.1.42",
+      lanIp: "192.168.2.42",
       expectedUrl: "ws://127.0.0.1:18800",
     },
     {

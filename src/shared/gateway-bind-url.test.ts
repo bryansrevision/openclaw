@@ -4,7 +4,7 @@ import { resolveGatewayBindUrl } from "./gateway-bind-url.js";
 describe("shared/gateway-bind-url", () => {
   it("returns null for loopback/default binds", () => {
     const pickTailnetHost = vi.fn(() => "100.64.0.1");
-    const pickLanHost = vi.fn(() => "192.168.1.2");
+    const pickLanHost = vi.fn(() => "192.168.2.2");
 
     expect(
       resolveGatewayBindUrl({
@@ -83,10 +83,10 @@ describe("shared/gateway-bind-url", () => {
         scheme: "wss",
         port: 8443,
         pickTailnetHost: vi.fn(),
-        pickLanHost: () => "192.168.1.2",
+        pickLanHost: () => "192.168.2.2",
       }),
     ).toEqual({
-      url: "wss://192.168.1.2:8443",
+      url: "wss://192.168.2.2:8443",
       source: "gateway.bind=lan",
     });
     expect(
@@ -104,7 +104,7 @@ describe("shared/gateway-bind-url", () => {
 
   it("returns null for unrecognized bind values without probing pickers", () => {
     const pickTailnetHost = vi.fn(() => "100.64.0.1");
-    const pickLanHost = vi.fn(() => "192.168.1.2");
+    const pickLanHost = vi.fn(() => "192.168.2.2");
 
     expect(
       resolveGatewayBindUrl({

@@ -424,13 +424,13 @@ describe("pairing setup code", () => {
       config: {
         gateway: {
           bind: "custom",
-          customBindHost: "192.168.1.20",
+          customBindHost: "192.168.2.20",
           auth: { mode: "token", token: "tok_123" },
         },
       } satisfies ResolveSetupConfig,
       expected: {
         authLabel: "token",
-        url: "ws://192.168.1.20:18789",
+        url: "ws://192.168.2.20:18789",
         urlSource: "gateway.bind=custom",
       },
     },
@@ -499,11 +499,11 @@ describe("pairing setup code", () => {
         },
       } satisfies ResolveSetupConfig,
       options: {
-        networkInterfaces: () => createIpv4NetworkInterfaces("192.168.1.20"),
+        networkInterfaces: () => createIpv4NetworkInterfaces("192.168.2.20"),
       } satisfies ResolveSetupOptions,
       expected: {
         authLabel: "password",
-        url: "ws://192.168.1.20:18789",
+        url: "ws://192.168.2.20:18789",
         urlSource: "gateway.bind=lan",
       },
     });

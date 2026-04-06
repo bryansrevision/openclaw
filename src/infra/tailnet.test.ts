@@ -17,7 +17,7 @@ describe("tailnet helpers", () => {
     expect(isTailnetIPv4("100.64.0.1")).toBe(true);
     expect(isTailnetIPv4("100.127.255.254")).toBe(true);
     expect(isTailnetIPv4("100.63.255.255")).toBe(false);
-    expect(isTailnetIPv4("192.168.1.10")).toBe(false);
+    expect(isTailnetIPv4("192.168.2.10")).toBe(false);
   });
 
   it("lists unique non-internal tailnet addresses only", () => {

@@ -19,7 +19,7 @@ describe("resolveCanvasHostUrl", () => {
         canvasPort: 3000,
         hostOverride: " canvas.openclaw.ai ",
         requestHost: "gateway.local:9000",
-        localAddress: "192.168.1.10",
+        localAddress: "192.168.2.10",
       },
       expected: "http://canvas.openclaw.ai:3000",
     },

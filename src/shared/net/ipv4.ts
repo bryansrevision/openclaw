@@ -7,7 +7,7 @@ export function validateDottedDecimalIPv4Input(value: string | undefined): strin
   if (isCanonicalDottedDecimalIPv4(value)) {
     return undefined;
   }
-  return "Invalid IPv4 address (e.g., 192.168.1.100)";
+  return "Invalid IPv4 address (e.g., 192.168.2.100)";
 }
 
 // Backward-compatible alias for callers using the old helper name.

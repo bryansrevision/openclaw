@@ -38,7 +38,7 @@ need a separate `openclaw plugins install` step.
      channels: {
        bluebubbles: {
          enabled: true,
-         serverUrl: "http://192.168.1.100:1234",
+         serverUrl: "http://192.168.2.100:1234",
          password: "example-password",
          webhookPath: "/bluebubbles-webhook",
        },
@@ -139,7 +139,7 @@ openclaw onboard
 
 The wizard prompts for:
 
-- **Server URL** (required): BlueBubbles server address (e.g., `http://192.168.1.100:1234`)
+- **Server URL** (required): BlueBubbles server address (e.g., `http://192.168.2.100:1234`)
 - **Password** (required): API password from BlueBubbles Server settings
 - **Webhook path** (optional): Defaults to `/bluebubbles-webhook`
 - **DM policy**: pairing, allowlist, open, or disabled
@@ -148,7 +148,7 @@ The wizard prompts for:
 You can also add BlueBubbles via CLI:
 
 ```
-openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --password <password>
+openclaw channels add bluebubbles --http-url http://192.168.2.100:1234 --password <password>
 ```
 
 ## Access control (DMs + groups)

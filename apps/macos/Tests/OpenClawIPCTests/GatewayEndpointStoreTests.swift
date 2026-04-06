@@ -188,8 +188,8 @@ struct GatewayEndpointStoreTests {
         let host = GatewayEndpointStore._testResolveLocalGatewayHost(
             bindMode: "custom",
             tailscaleIP: "100.64.1.9",
-            customBindHost: "192.168.1.10")
-        #expect(host == "192.168.1.10")
+            customBindHost: "192.168.2.10")
+        #expect(host == "192.168.2.10")
     }
 
     @Test func `local config uses local gateway auth and host resolution`() {
