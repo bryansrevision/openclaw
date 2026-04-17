@@ -76,6 +76,28 @@ function oauthCredentialMatches(a: OAuthCredential, b: OAuthCredential): boolean
   );
 }
 
+function hasUsableStoredOpenAICodexCredential(
+  credential: unknown,
+  now = Date.now(),
+): credential is OAuthCredential {
+  return Boolean(
+    credential &&
+    typeof credential === "object" &&
+    credential !== null &&
+    "type" in credential &&
+    "provider" in credential &&
+    "access" in credential &&
+    "expires" in credential &&
+    credential.type === "oauth" &&
+    credential.provider === PROVIDER_ID &&
+    typeof credential.access === "string" &&
+    credential.access.trim().length > 0 &&
+    typeof credential.expires === "number" &&
+    Number.isFinite(credential.expires) &&
+    now < credential.expires,
+  );
+}
+
 export function readOpenAICodexCliOAuthProfile(params: {
   env?: NodeJS.ProcessEnv;
   store: AuthProfileStore;
@@ -104,7 +126,10 @@ export function readOpenAICodexCliOAuthProfile(params: {
     ...(identity.profileName ? { displayName: identity.profileName } : {}),
   };
   const existing = params.store.profiles[OPENAI_CODEX_DEFAULT_PROFILE_ID];
-  if (existing && (existing.type !== "oauth" || !oauthCredentialMatches(existing, credential))) {
+  if (
+    hasUsableStoredOpenAICodexCredential(existing) &&
+    !oauthCredentialMatches(existing, credential)
+  ) {
     return null;
   }
 
