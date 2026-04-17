@@ -76,6 +76,46 @@ function oauthCredentialMatches(a: OAuthCredential, b: OAuthCredential): boolean
   );
 }
 
+function normalizeIdentityToken(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function normalizeEmailToken(value: string | undefined): string | undefined {
+  return normalizeIdentityToken(value)?.toLowerCase();
+}
+
+function hasIdentityContinuity(existing: unknown, incoming: OAuthCredential): boolean {
+  if (
+    !existing ||
+    typeof existing !== "object" ||
+    existing === null ||
+    !("type" in existing) ||
+    !("provider" in existing) ||
+    existing.type !== "oauth" ||
+    existing.provider !== PROVIDER_ID
+  ) {
+    return true;
+  }
+  if (oauthCredentialMatches(existing, incoming)) {
+    return true;
+  }
+
+  const existingAccountId = normalizeIdentityToken(existing.accountId);
+  const incomingAccountId = normalizeIdentityToken(incoming.accountId);
+  if (existingAccountId !== undefined && incomingAccountId !== undefined) {
+    return existingAccountId === incomingAccountId;
+  }
+
+  const existingEmail = normalizeEmailToken(existing.email);
+  const incomingEmail = normalizeEmailToken(incoming.email);
+  if (existingEmail !== undefined && incomingEmail !== undefined) {
+    return existingEmail === incomingEmail;
+  }
+
+  return false;
+}
+
 function hasUsableStoredOpenAICodexCredential(
   credential: unknown,
   now = Date.now(),
@@ -126,9 +166,17 @@ export function readOpenAICodexCliOAuthProfile(params: {
     ...(identity.profileName ? { displayName: identity.profileName } : {}),
   };
   const existing = params.store.profiles[OPENAI_CODEX_DEFAULT_PROFILE_ID];
+  const existingOAuth =
+    existing?.type === "oauth" && existing.provider === PROVIDER_ID ? existing : undefined;
+  if (existing && !existingOAuth) {
+    return null;
+  }
+  if (!hasIdentityContinuity(existingOAuth, credential)) {
+    return null;
+  }
   if (
-    hasUsableStoredOpenAICodexCredential(existing) &&
-    !oauthCredentialMatches(existing, credential)
+    hasUsableStoredOpenAICodexCredential(existingOAuth) &&
+    !oauthCredentialMatches(existingOAuth, credential)
   ) {
     return null;
   }

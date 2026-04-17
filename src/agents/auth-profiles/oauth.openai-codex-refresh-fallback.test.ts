@@ -87,6 +87,8 @@ function createExpiredOauthStore(params: {
   profileId: string;
   provider: string;
   access?: string;
+  accountId?: string;
+  email?: string;
 }): AuthProfileStore {
   return {
     version: 1,
@@ -97,6 +99,8 @@ function createExpiredOauthStore(params: {
         access: params.access ?? "cached-access-token",
         refresh: "refresh-token",
         expires: Date.now() - 60_000,
+        accountId: params.accountId,
+        email: params.email,
       },
     },
   };
@@ -227,6 +231,7 @@ describe("resolveApiKeyForProfile openai-codex refresh fallback", () => {
             access: "expired-access-token",
             refresh: "expired-refresh-token",
             expires: Date.now() - 60_000,
+            accountId: "acct-cli",
           },
         },
       },
@@ -269,6 +274,7 @@ describe("resolveApiKeyForProfile openai-codex refresh fallback", () => {
             access: "expired-access-token",
             refresh: "expired-refresh-token",
             expires: Date.now() - 60_000,
+            accountId: "acct-cli",
           },
         },
       },
@@ -359,6 +365,56 @@ describe("resolveApiKeyForProfile openai-codex refresh fallback", () => {
     });
 
     expect(refreshProviderOAuthCredentialWithPluginMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses mismatched imported Codex CLI credentials when the stored default is expired", async () => {
+    const profileId = "openai-codex:default";
+    saveAuthProfileStore(
+      {
+        version: 1,
+        profiles: {
+          [profileId]: {
+            type: "oauth",
+            provider: "openai-codex",
+            access: "expired-access-token",
+            refresh: "expired-refresh-token",
+            expires: Date.now() - 60_000,
+            accountId: "acct-local",
+          },
+        },
+      },
+      agentDir,
+    );
+    readCodexCliCredentialsCachedMock.mockReturnValueOnce({
+      type: "oauth",
+      provider: "openai-codex",
+      access: "fresh-cli-access-token",
+      refresh: "fresh-cli-refresh-token",
+      expires: Date.now() + 86_400_000,
+      accountId: "acct-cli",
+    });
+    refreshProviderOAuthCredentialWithPluginMock.mockResolvedValueOnce({
+      type: "oauth",
+      provider: "openai-codex",
+      access: "rotated-local-access-token",
+      refresh: "rotated-local-refresh-token",
+      expires: Date.now() + 86_400_000,
+      accountId: "acct-local",
+    });
+
+    await expect(
+      resolveApiKeyForProfile({
+        store: ensureAuthProfileStore(agentDir),
+        profileId,
+        agentDir,
+      }),
+    ).resolves.toEqual({
+      apiKey: "rotated-local-access-token",
+      provider: "openai-codex",
+      email: undefined,
+    });
+
+    expect(refreshProviderOAuthCredentialWithPluginMock).toHaveBeenCalledTimes(1);
   });
 
   it("keeps the canonical refresh token when imported Codex CLI state is stale", async () => {

@@ -125,6 +125,7 @@ describe("auth external oauth helpers", () => {
         access: "fresh-cli-access-token",
         refresh: "fresh-cli-refresh-token",
         expires: Date.now() + 60_000,
+        accountId: "acct-cli",
       }),
     );
 
@@ -134,6 +135,7 @@ describe("auth external oauth helpers", () => {
           access: "stale-store-access-token",
           refresh: "stale-store-refresh-token",
           expires: Date.now() - 60_000,
+          accountId: "acct-cli",
         }),
       }),
     );
