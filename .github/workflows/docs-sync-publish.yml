@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   sync-publish-repo:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v4

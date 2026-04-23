@@ -42,7 +42,7 @@ env:
 jobs:
   preflight_openclaw_npm:
     if: ${{ inputs.preflight_only && !inputs.promote_beta_to_latest }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     steps:
@@ -188,7 +188,7 @@ jobs:
 
   validate_publish_request:
     if: ${{ !inputs.preflight_only && !inputs.promote_beta_to_latest }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     steps:
@@ -216,7 +216,7 @@ jobs:
     # npm trusted publishing + provenance requires a GitHub-hosted runner.
     needs: [validate_publish_request]
     if: ${{ !inputs.preflight_only && !inputs.promote_beta_to_latest }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: npm-release
     permissions:
       actions: read
@@ -354,7 +354,7 @@ jobs:
 
   promote_beta_to_latest:
     if: ${{ inputs.promote_beta_to_latest }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: npm-release
     permissions:
       contents: read

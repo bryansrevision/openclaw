@@ -1,0 +1,160 @@
+name: Build iOS App
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - testflight
+          - release
+      ios_version:
+        description: 'iOS minimum deployment target'
+        required: false
+        default: '14.0'
+  push:
+    paths:
+      - 'apps/ios/**'
+      - '.github/workflows/build-ios.yml'
+      - 'pnpm-lock.yaml'
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-ios:
+    name: Build iOS Application
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    environment:
+      name: ios-build
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: 📥 Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          brew install xcodegen
+
+      - name: 🔑 Setup signing
+        run: |
+          cd apps/ios
+          # Use local signing for development builds
+          cp LocalSigning.xcconfig.example LocalSigning.xcconfig || true
+          cat > LocalSigning.xcconfig << 'EOF'
+          // Local development signing
+          DEVELOPMENT_TEAM = $(inherited)
+          CODE_SIGN_STYLE = Automatic
+          CODE_SIGN_IDENTITY = Apple Development
+          EOF
+
+      - name: 🛠️ Generate Xcode project
+        run: |
+          cd apps/ios
+          xcodegen generate
+
+      - name: 🏗️ Build iOS app (Debug)
+        if: github.event.inputs.build_type == 'debug' || github.event_name == 'push'
+        run: |
+          cd apps/ios
+          xcodebuild \
+            -scheme OpenClaw \
+            -configuration Debug \
+            -derivedDataPath build \
+            -archivePath build/OpenClaw.xcarchive \
+            archive
+
+      - name: 📦 Build for TestFlight
+        if: github.event.inputs.build_type == 'testflight'
+        run: |
+          cd apps/ios
+          xcodebuild \
+            -scheme OpenClaw \
+            -configuration Release \
+            -derivedDataPath build \
+            -archivePath build/OpenClaw.xcarchive \
+            archive
+
+      - name: ✅ Verify build artifacts
+        run: |
+          ls -lah apps/ios/build/OpenClaw.xcarchive/
+          echo "✅ iOS archive created successfully"
+
+      - name: 📤 Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openclaw-ios-${{ github.event.inputs.build_type || 'debug' }}
+          path: apps/ios/build/OpenClaw.xcarchive/
+          retention-days: 7
+
+      - name: 📝 Create build summary
+        run: |
+          cat > build-summary.txt << 'EOF'
+          📱 OpenClaw iOS Build Summary
+          ==============================
+          Build Type:     ${{ github.event.inputs.build_type || 'debug' }}
+          iOS Minimum:    ${{ github.event.inputs.ios_version || '14.0' }}
+          Build Date:     $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Commit SHA:     ${{ github.sha }}
+          Branch:         ${{ github.ref_name }}
+          Workflow:       ${{ github.workflow }}
+          
+          📦 Artifact:
+          - Location: apps/ios/build/OpenClaw.xcarchive/
+          - Type: iOS App Archive
+          - Format: xcarchive (ready for App Store / TestFlight)
+          
+          ✅ Next Steps:
+          1. For TestFlight: Use Fastlane to upload archive
+             fastlane pilot upload --ipa ...
+          2. For Local Testing: Export to .ipa from Xcode
+          3. For App Store: Submit through App Store Connect
+          EOF
+          cat build-summary.txt
+
+      - name: 📤 Upload build summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-summary-ios
+          path: build-summary.txt
+
+  notify:
+    name: Notify Build Status
+    needs: build-ios
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✅ Build succeeded
+        if: needs.build-ios.result == 'success'
+        run: |
+          echo "✅ iOS build completed successfully"
+          echo "📱 App archive available in artifacts"
+
+      - name: ❌ Build failed
+        if: needs.build-ios.result == 'failure'
+        run: |
+          echo "❌ iOS build failed"
+          exit 1

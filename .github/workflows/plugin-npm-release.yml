@@ -42,7 +42,7 @@ env:
 
 jobs:
   preview_plugins_npm:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     outputs:
@@ -141,7 +141,7 @@ jobs:
   preview_plugin_pack:
     needs: preview_plugins_npm
     if: needs.preview_plugins_npm.outputs.has_candidates == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     strategy:
@@ -174,7 +174,7 @@ jobs:
   publish_plugins_npm:
     needs: [preview_plugins_npm, preview_plugin_pack]
     if: github.event_name == 'workflow_dispatch' && needs.preview_plugins_npm.outputs.has_candidates == 'true'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: npm-release
     permissions:
       contents: read

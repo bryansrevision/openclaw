@@ -24,7 +24,7 @@ env:
 
 jobs:
   validate_macos_release_request:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
     steps:

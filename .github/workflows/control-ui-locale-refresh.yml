@@ -29,7 +29,7 @@ concurrency:
 jobs:
   plan:
     if: github.repository == 'openclaw/openclaw' && (github.event_name != 'push' || github.actor != 'github-actions[bot]')
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       has_locales: ${{ steps.plan.outputs.has_locales }}
       locales_json: ${{ steps.plan.outputs.locales_json }}
@@ -108,7 +108,7 @@ jobs:
       max-parallel: 4
       matrix:
         locale: ${{ fromJson(needs.plan.outputs.locales_json) }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Refresh ${{ matrix.locale }}
     steps:
       - name: Checkout
